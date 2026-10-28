@@ -3,23 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ET-Studio</title>
+    <title>et-studio Homepage</title>
     <style>
-        .überschrift
-        {
-            font-family: 'Times New Roman', Times, serif;
-            color: blue;
+        /* Allgemeine Stile */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Amazon Ember", Arial, sans-serif;
+            background-color: #eaeded;
+            color: #0f1111;
+        }
+
+        /* Navigationsleiste (Amazon-Style) */
+        .navbar {
+            background-color: #131921;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        /* et-studio Logo ohne .de */
+        .logo {
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            letter-spacing: 0.5px;
+        }
+
+        /* Neuer Button neben dem Logo über et-studio */
+        .header-info-btn {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .header-info-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hauptbereich */
+        .main-content {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 0 20px 40px 20px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(to bottom, #8cc6ff, #eaeded);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0 0 4px 4px;
+            margin-bottom: -30px; /* Lässt die Produkte ins Banner rücken */
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text {
+            text-align: center;
+        }
+
+        .hero-text h1 {
+            margin: 0;
+            font-size: 32px;
+            color: #131921;
+        }
+
+        /* Produkt Grid */
+        .product-grid {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            justify-items: center;
+            padding-bottom: 40px;
+        }
+
+        /* Produkt-Karte */
+        .amazon-product-button {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 260px;
+            padding: 15px;
+            border: 1px solid #e7e7e7;
+            border-radius: 4px;
+            background-color: #ffffff;
+            cursor: pointer;
+            text-decoration: none;
+            color: #0f1111;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+
+        .amazon-product-button:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .product-image-container {
+            width: 100%;
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            background-color: #f7f7f7;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .product-image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .product-title {
+            font-size: 14px;
+            line-height: 1.4;
+            font-weight: 500;
+            margin: 0 0 8px 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 58px;
+        }
+
+        .product-price {
+            font-size: 21px;
+            font-weight: 700;
+            color: #0F1111;
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .price-currency {
+            font-size: 12px;
+            margin-right: 2px;
+            margin-top: 2px;
+        }
+
+        .amazon-action-btn {
+            background: #ffd814;
+            border: 1px solid #fcd200;
+            border-radius: 20px;
+            padding: 8px 10px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 2px 5px 0 rgba(213,217,217,.5);
+            margin-top: auto;
+        }
+
+        .amazon-product-button:hover .amazon-action-btn {
+            background: #f7ca00;
+            border-color: #f2c200;
+        }
+
+        /* Info-Link Bereich unter den Spielen */
+        .ios-info-container {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #e7e7e7;
+            border-radius: 4px;
+        }
+
+        .ios-info-link {
+            color: #007185;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .ios-info-link:hover {
+            color: #c45500;
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <h1 id="text" class="überschrift">Willkomen bei ET-Studio</h1>
-    <button onclick=Next()>Next Text</button>
-    <script>
-        function Next()
-        {
-            document.getElementById("text").innerText="Baum"
-        }
-    </script>
+
+    <!-- Obere Navigation -->
+    <header>
+        <div class="navbar">
+            <!-- Logo (jetzt ohne .de) -->
+            <a href="#" class="logo">et-studio</a>
+            
+            <!-- Link für den "Über et-studio" Button -->
+            <!-- Ersetze "https://deine-ueber-uns-seite.com" mit deiner echten Zielseite -->
+            <a href="https://deine-ueber-uns-seite.com" class="header-info-btn" target="_blank">Über et-studio</a>
+        </div>
+    </header>
+
+    <!-- Hauptinhalt -->
+    <main class="main-content">
+        
+        <!-- Großes Willkommens-Banner -->
+        <div class="hero-banner">
+            <div class="hero-text">
+                <h1>Willkommen bei et-studio</h1>
+                <p>Entdecke die besten Spiele und Projekte an einem Ort.</p>
+            </div>
+        </div>
+
+        <!-- Hier kommen die Produktkarten rein -->
+        <div class="product-grid">
+
+            <!-- Produkt 1 -->
+            <a href="https://link-zu-spiel-1.com" class="amazon-product-button" target="_blank">
+                <div class="product-image-container">
+                    <img src="https://placeholder.com" alt="Spiel 1">
+                </div>
+                <h3 class="product-title">Galaxy Run – Ein cooles Raumschiff Spiel für groß und klein.</h3>
+                <div class="product-price"><span class="price-currency">€</span>free</div>
+                <div class="amazon-action-btn">Jetzt spielen</div>
+            </a>
+        </div>
+
+        <!-- Bereich unter allen Spielen für den speziellen Link -->
+        <div class="ios-info-container">
+            <!-- Ersetze "https://beispiel-website.de" mit deiner echten Zielseite -->
+            <a href="https://beispiel-website.de" class="ios-info-link" target="_blank">
+                Wieso gibt es kein iOS?
+            </a>
+        </div>
+
+    </main>
+
 </body>
 </html>
