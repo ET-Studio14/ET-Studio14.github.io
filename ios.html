@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wieso kein iOS? - et-studio</title>
+    <style>
+        /* Allgemeine Stile */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Amazon Ember", Arial, sans-serif;
+            background-color: #eaeded;
+            color: #0f1111;
+        }
+
+        /* Navigationsleiste (Amazon-Style) */
+        .navbar {
+            background-color: #131921;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        /* Zweifarbiges Logo im Amazon-Style */
+        .logo {
+            color: #ffffff; /* et- bleibt weiß */
+            font-size: 22px;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            letter-spacing: 0.5px;
+        }
+
+        .logo span {
+            color: #ff9900; /* studio wird amazon-orange */
+        }
+
+        /* Home Button neben dem Logo */
+        .header-home-btn {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .header-home-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hauptbereich */
+        .main-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Gelber Kasten für die iOS Erklärung */
+        .ios-explain-box {
+            background-color: #fff9e6;
+            border: 1px solid #fcd200;
+            border-radius: 4px;
+            padding: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .ios-explain-box h1 {
+            margin-top: 0;
+            font-size: 24px;
+            color: #c45500;
+            font-weight: 700;
+            border-bottom: 1px solid #fcd200;
+            padding-bottom: 10px;
+        }
+
+        .ios-explain-box p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #131921;
+        }
+
+        /* Styling für die Gründe-Liste */
+        .reasons-list {
+            margin-top: 20px;
+            padding-left: 20px;
+        }
+
+        .reasons-list li {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #131921;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Obere Navigation -->
+    <header>
+        <div class="navbar">
+            <!-- Logo mit farblicher Trennung -->
+            <a href="index.html" class="logo">et-<span>studio</span></a>
+            
+            <!-- Home Button, der zurück zur Startseite führt -->
+            <a href="index.html" class="header-home-btn">Home</a>
+        </div>
+    </header>
+
+    <!-- Hauptinhalt -->
+    <main class="main-content">
+        
+        <!-- Gelber Kasten mit deiner Erklärung -->
+        <div class="ios-explain-box">
+            <h1>Wieso gibt es kein iOS?</h1>
+            <p>Viele von euch haben sich gefragt, warum unsere Spiele nicht für das iPhone oder iPad verfügbar sind. Hier sind meine Hauptgründe dafür:</p>
+            
+            <ul class="reasons-list">
+                <li>iOS ist für Spieleentwickler einfach extrem teuer.</li>
+                <li>Apple allgemein ist sehr teuer (Lizenzen, Geräte, etc.).</li>
+                <li>Fast alle Handys verwenden standardmäßig den Google Play Store. Wieso ist Apple da so komisch und verwendet auf einmal den App Store und iOS?</li>
+            </ul>
+        </div>
+
+    </main>
+
+</body>
+</html>
