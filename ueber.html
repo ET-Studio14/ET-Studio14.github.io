@@ -23,15 +23,19 @@
             gap: 25px;
         }
 
-        /* et-studio Logo */
+        /* Zweifarbiges et-studio Logo */
         .logo {
-            color: #ffffff;
+            color: #ffffff; /* et- bleibt weiß */
             font-size: 22px;
             font-weight: 700;
             text-decoration: none;
             display: flex;
             align-items: center;
             letter-spacing: 0.5px;
+        }
+
+        .logo span {
+            color: #ff9900; /* studio wird amazon-orange */
         }
 
         /* Home Button neben dem Logo */
@@ -116,11 +120,10 @@
     <!-- Obere Navigation -->
     <header>
         <div class="navbar">
-            <!-- Logo -->
-            <a href="#" class="logo">et-studio</a>
+            <!-- Logo mit farblicher Trennung -->
+            <a href="index.html" class="logo">et-<span>studio</span></a>
             
             <!-- Home Button, der zurück zur Startseite führt -->
-            <!-- Ersetze "index.html" mit deinem echten Link, falls nötig -->
             <a href="index.html" class="header-home-btn">Home</a>
         </div>
     </header>
@@ -131,16 +134,17 @@
         <div class="content-box">
             <h1>Über ET-Studio</h1>
             
-            <p>ET-Studio ist eine einmann Videospiel Prodoktion. ET-Studio erstellt die coolsten Spiele. Und das alles MIt Unity und der hilfe von Mr. Luchs (Lukas Schneider) Vielen Dank für den Kurs. 😀</p
+            <p>ET-Studio ist eine einmann Videospiel Prodoktion. ET-Studio erstellt die coolsten Spiele. Und das alles MIt Unity und der hilfe von Mr. Luchs (Lukas Schneider) Vielen Dank für den Kurs. 😀</p>
             <p>Schreibe hier die coolsten Funktionen deines Spiels auf. Zum Beispiel: Atemberaubende Grafik, knifflige Rätsel oder rasante Action.</p>
             
             <h2>ET-Studio macht Spiel für das Handy und den Computer.</h2>
             <p>Downloads auf itch.io:</p>
-            <a href="https://itch.io/">itch</a>
+            <a href="https://itch.io/" class="download-btn" target="_blank">Auf itch.io ansehen</a>
         </div>
 
     </main>
 
 </body>
 </html>
+
 
