@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spiel Details - et-studio</title>
+    <style>
+        /* Allgemeine Stile */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Amazon Ember", Arial, sans-serif;
+            background-color: #eaeded;
+            color: #0f1111;
+        }
+
+        /* Navigationsleiste (Amazon-Style) */
+        .navbar {
+            background-color: #131921;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        /* Zweifarbiges et-studio Logo */
+        .logo {
+            color: #ffffff; /* et- bleibt weiß */
+            font-size: 22px;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            letter-spacing: 0.5px;
+        }
+
+        .logo span {
+            color: #ff9900; /* studio wird amazon-orange */
+        }
+
+        /* Home Button neben dem Logo */
+        .header-home-btn {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .header-home-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hauptbereich */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Container für die Produkt-Details (Zwei Spalten) */
+        .detail-container {
+            background-color: #ffffff;
+            border: 1px solid #e7e7e7;
+            border-radius: 4px;
+            padding: 30px;
+            display: flex;
+            gap: 40px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        /* Linke Spalte: Das Bild */
+        .image-column {
+            flex: 1;
+            max-width: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .game-screenshot {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 4px;
+            border: 1px solid #f2f2f2;
+            background-color: #f7f7f7;
+        }
+
+        /* Rechte Spalte: Die Infos */
+        .info-column {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: #131921;
+            border-bottom: 1px solid #e7e7e7;
+            padding-bottom: 15px;
+        }
+
+        /* Preis im Amazon-Style */
+        .game-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #B12704; /* Typisches Amazon-Rot für Preise/Angebote */
+            margin: 15px 0;
+        }
+
+        .price-label {
+            font-size: 14px;
+            color: #565959;
+            font-weight: 400;
+        }
+
+        .game-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333333;
+            margin-bottom: 25px;
+        }
+
+        .game-features-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+        }
+
+        .game-features-list {
+            margin: 0 0 30px 0;
+            padding-left: 20px;
+        }
+
+        .game-features-list li {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 5px;
+        }
+
+        /* Typischer großer gelber Amazon-Aktionsbutton */
+        .play-now-btn {
+            align-self: flex-start; /* Verhindert, dass der Button über die ganze Breite geht */
+            background: #ffd814;
+            border: 1px solid #fcd200;
+            border-radius: 20px;
+            padding: 12px 35px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 500;
+            color: #0f1111;
+            text-decoration: none;
+            box-shadow: 0 2px 5px 0 rgba(213,217,217,.5);
+            transition: background 0.2s;
+        }
+
+        .play-now-btn:hover {
+            background: #f7ca00;
+            border-color: #f2c200;
+        }
+
+        /* Responsive Anpassung für kleinere Bildschirme */
+        @media (max-width: 768px) {
+            .detail-container {
+                flex-direction: column;
+            }
+            .image-column {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Obere Navigation -->
+    <header>
+        <div class="navbar">
+            <!-- Logo mit farblicher Trennung -->
+            <a href="index.html" class="logo">et-<span>studio</span></a>
+            
+            <!-- Home Button, der zurück zur Startseite führt -->
+            <a href="index.html" class="header-home-btn">Home</a>
+        </div>
+    </header>
+
+    <!-- Hauptinhalt -->
+    <main class="main-content">
+        
+        <div class="detail-container">
+            
+            <!-- Linke Spalte: Platz für das Bild -->
+            <div class="image-column">
+                <!-- Ersetze "https://placeholder.com" mit deinem echten Screenshot-Link -->
+                <img src="https://img.itch.zone/aW1hZ2UvNTI2NTQ4OC8zMTU4NDAxMy5wbmc=/original/rZmvwH.png" alt="Spiel Screenshot" class="game-screenshot">
+            </div>
+            
+            <!-- Rechte Spalte: Beschreibung und Button -->
+            <div class="info-column">
+                <h1 class="game-title">Galaxy Run</h1>
+                
+                <div class="game-price">
+                    <span class="price-label">Preis:</span> Kostenlos
+                </div>
+                
+                <p class="game-description">
+                    Steuere dein Raumschiff durch ein gefährliches Asteroidenfeld und sammle wertvolle kosmische Kristalle! Weiche Hindernissen aus, schalte Upgrades frei und versuche den Highscore zu knacken. Ein rasanter Arcade-Spaß für zwischendurch.
+                </p>
+                
+                <h3 class="game-features-title">Highlights:</h3>
+                <ul class="game-features-list">
+                    <li>Einfache und intuitive Steuerung per Tastatur</li>
+                    <li>Endloses, actiongeladenes Gameplay</li>
+                </ul>
+                
+                <!-- Der "Jetzt spielen" Aktionsbutton -->
+                <!-- Ersetze den Link mit deinem Itch.io- oder Web-Link -->
+                <a href="https://et-studio.itch.io/galaxy-run" class="play-now-btn" target="_blank">Jetzt spielen</a>
+            </div>
+            
+        </div>
+
+    </main>
+
+</body>
+</html>
