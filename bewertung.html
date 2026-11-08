@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Spiele bewerten | et-studio</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#eaeded;color:#0f1111;
+ font-family:"Amazon Ember",Arial,sans-serif;
+}
+header{
+ height:62px;background:#131921;
+ display:flex;align-items:center;
+ padding:0 20px;gap:25px;
+}
+.logo{font-size:22px;font-weight:700;color:white;text-decoration:none}
+.logo span{color:#ff9900}
+.header-home-btn {
+ background-color: transparent;
+ color: #ffffff;
+ border: 1px solid #ffffff;
+ border-radius: 4px;
+ padding: 6px 12px;
+ font-size: 14px;
+ font-weight: 500;
+ text-decoration: none;
+ transition: background 0.2s;
+}
+.header-home-btn:hover {
+ background-color: rgba(255, 255, 255, 0.1);
+}
+main{max-width:800px;margin:30px auto;padding:0 20px}
+
+/* Bewertungs-Formular im Amazon-Style */
+.feedback-box {
+ background-color: #ffffff;
+ border: 1px solid #e7e7e7;
+ border-radius: 4px;
+ padding: 30px;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+ margin-bottom: 25px;
+}
+.feedback-box h1 {
+ margin-top: 0;
+ font-size: 24px;
+ color: #131921;
+ border-bottom: 1px solid #e7e7e7;
+ padding-bottom: 10px;
+}
+.form-group {
+ margin-bottom: 20px;
+}
+.form-group label {
+ display: block;
+ font-size: 14px;
+ font-weight: 700;
+ margin-bottom: 6px;
+}
+.form-group input, .form-group textarea {
+ width: 100%;
+ padding: 10px;
+ border: 1px solid #a6a6a6;
+ border-radius: 3px;
+ font-size: 14px;
+ font-family: Arial, sans-serif;
+}
+.form-group input:focus, .form-group textarea:focus {
+ border-color: #e77600;
+ box-shadow: 0 0 3px rgba(228,121,17,0.5);
+ outline: none;
+}
+
+/* Gelber Absende-Button */
+.submit-btn {
+ background: #ffd814;
+ border: 1px solid #fcd200;
+ border-radius: 20px;
+ padding: 10px 25px;
+ font-size: 14px;
+ font-weight: 500;
+ color: #0f1111;
+ cursor: pointer;
+ box-shadow: 0 2px 5px 0 rgba(213,217,217,.5);
+}
+.submit-btn:hover {
+ background: #f7ca00;
+ border-color: #f2c200;
+}
+
+/* Gelber Kasten für manuelle Zusammenfassungen */
+.summary-container {
+ background-color: #fff9e6;
+ border: 1px solid #fcd200;
+ border-radius: 4px;
+ padding: 25px;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.summary-container h2 {
+ margin-top: 0;
+ font-size: 18px;
+ color: #c45500;
+ font-weight: 700;
+}
+.review-item {
+ border-bottom: 1px dashed #fcd200;
+ padding: 10px 0;
+}
+.review-item:last-child {
+ border-bottom: none;
+}
+.review-email {
+ font-size: 12px;
+ color: #565959;
+ font-weight: bold;
+}
+.review-text {
+ margin: 4px 0 0 0;
+ font-size: 14px;
+ line-height: 1.5;
+}
+</style>
+</head>
+<body>
+
+<header>
+ <a href="index.html" class="logo">et-<span>studio</span></a>
+ <a href="index.html" class="header-home-btn">Home</a>
+</header>
+
+<main>
+ <!-- Formular-Bereich -->
+ <div class="feedback-box">
+  <h1>Spiel bewerten</h1>
+  
+  <!-- Hier kommt deine Formspree-URL mit deiner ID rein -->
+  <form action="https://formspree.io/f/myeeqgar" method="POST">
+   
+   <div class="form-group">
+    <label for="email">Deine E-Mail-Adresse:</label>
+    <!-- Das Attribut name="_replyto" sorgt dafür, dass du in deinem Postfach direkt auf die Mail antworten kannst -->
+    <input type="email" id="email" name="_replyto" placeholder="name@beispiel.de" required>
+   </div>
+   
+   <div class="form-group">
+    <label for="message">Deine Bewertung / Feedback:</label>
+    <textarea id="message" name="Bewertung" rows="6" placeholder="Wie gefallen dir die Spiele von et-studio? Geben sie am besten welches Spiel sie bewerten an." required></textarea>
+   </div>
+   
+   <button type="submit" class="submit-btn">Bewertung abschicken</button>
+  </form>
+ </div>
+
+ <!-- Gelber Kasten für deine Zusammenfassungen -->
+ <div class="summary-container">
+  <h2>Das sagen die Spieler</h2>
+  <p>Hier sammle ich euer Feedback! Sobald mir jemand eine Bewertung schickt, trage ich sie hier ein:</p>
+  
+  <!-- Beispiel-Bewertung 1 -->
+  <div class="review-item">
+   <div class="review-email">Spieler123@web.de schreibt:</div>
+   <p class="review-text">"Das neue Superhelden-Spiel macht mega Spaß, besonders auf dem Smartphone läuft es super flüssig!"</p>
+  </div>
+
+  <!-- Beispiel-Bewertung 2 -->
+  <div class="review-item">
+   <div class="review-email">tester@gmail.com schreibt:</div>
+   <p class="review-text">"Echt cooler Amazon-Look. Freue mich schon auf das nächste Game von et-studio!"</p>
+  </div>
+  
+ </div>
+</main>
+
+</body>
+</html>
