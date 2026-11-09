@@ -33,6 +33,18 @@ header{
 }
 main{max-width:800px;margin:30px auto;padding:0 20px}
 
+/* Info-Hinweiskasten über den Feldern */
+.info-text {
+ font-size: 13px;
+ color: #565959;
+ margin-bottom: 20px;
+ line-height: 1.5;
+ background: #f7f7f7;
+ padding: 12px;
+ border-left: 4px solid #ff9900;
+ border-radius: 4px;
+}
+
 /* Bewertungs-Formular im Amazon-Style */
 .feedback-box {
  background-color: #ffffff;
@@ -72,6 +84,13 @@ main{max-width:800px;margin:30px auto;padding:0 20px}
  outline: none;
 }
 
+/* Button-Leiste */
+.button-group {
+ display: flex;
+ gap: 10px;
+ flex-wrap: wrap;
+}
+
 /* Gelber Absende-Button */
 .submit-btn {
  background: #ffd814;
@@ -88,6 +107,34 @@ main{max-width:800px;margin:30px auto;padding:0 20px}
  background: #f7ca00;
  border-color: #f2c200;
 }
+
+/* Grauer Generieren-Button */
+.gen-btn {
+ background: #e7e7e7;
+ border: 1px solid #adb1b8;
+ border-radius: 20px;
+ padding: 10px 20px;
+ font-size: 14px;
+ font-weight: 500;
+ color: #0f1111;
+ cursor: pointer;
+ box-shadow: 0 2px 5px 0 rgba(213,217,217,.1);
+}
+.gen-btn:hover {
+ background: #d8d8d8;
+}
+
+/* Status-Meldungen */
+.status-msg {
+ margin-top: 15px;
+ font-size: 14px;
+ font-weight: bold;
+ display: none;
+ padding: 10px;
+ border-radius: 4px;
+}
+.status-success { color: #2e7d32; background-color: #e8f5e9; border: 1px solid #c8e6c9; }
+.status-error { color: #c62828; background-color: #ffebee; border: 1px solid #ffcdd2; }
 
 /* Gelber Kasten für manuelle Zusammenfassungen */
 .summary-container {
@@ -134,13 +181,17 @@ main{max-width:800px;margin:30px auto;padding:0 20px}
  <div class="feedback-box">
   <h1>Spiel bewerten</h1>
   
-  <!-- Hier kommt deine Formspree-URL mit deiner ID rein -->
-  <form action="https://formspree.io/f/myeeqgar" method="POST">
+  <form id="feedbackForm" action="https://formspree.io/f/myeeqgar" method="POST">
    
+   <!-- Der gewünschte Erklärkasten -->
+   <div class="info-text">
+     Falls Sie anonym sein wollen, lassen Sie die E-Mail leer oder klicken Sie auf den Button <strong>„Anonyme E-Mail generieren“</strong>, um eine zufällige Absender-Adresse zu erstellen. Falls Sie lieber Ihren echten Namen nutzen möchten, geben Sie Ihre E-Mail an und wir verwenden bei der Veröffentlichung nur alles vor dem @-Zeichen.
+   </div>
+
    <div class="form-group">
     <label for="email">Deine E-Mail-Adresse:</label>
-    <!-- Das Attribut name="_replyto" sorgt dafür, dass du in deinem Postfach direkt auf die Mail antworten kannst -->
-    <input type="email" id="email" name="_replyto" placeholder="name@beispiel.de" required>
+    <!-- Das "required" wurde entfernt, damit das Script eingreifen kann -->
+    <input type="email" id="email" name="_replyto" placeholder="name@beispiel.de">
    </div>
    
    <div class="form-group">
@@ -148,7 +199,13 @@ main{max-width:800px;margin:30px auto;padding:0 20px}
     <textarea id="message" name="Bewertung" rows="6" placeholder="Wie gefallen dir die Spiele von et-studio? Geben sie am besten welches Spiel sie bewerten an." required></textarea>
    </div>
    
-   <button type="submit" class="submit-btn">Bewertung abschicken</button>
+   <div class="button-group">
+    <button type="button" class="gen-btn" onclick="generateAnonEmail()">Anonyme E-Mail generieren</button>
+    <button type="submit" class="submit-btn" id="submitBtn">Bewertung abschicken</button>
+   </div>
+
+   <!-- Platzhalter für die Erfolgs- / Fehlermeldung -->
+   <div id="statusMessage" class="status-msg"></div>
   </form>
  </div>
 
@@ -171,6 +228,85 @@ main{max-width:800px;margin:30px auto;padding:0 20px}
   
  </div>
 </main>
+
+<script>
+  const form = document.getElementById("feedbackForm");
+  const emailInput = document.getElementById("email");
+  const messageInput = document.getElementById("message");
+  const submitBtn = document.getElementById("submitBtn");
+  const statusMessage = document.getElementById("statusMessage");
+
+  // Funktion zum Generieren der anonymen Mail
+  function generateAnonEmail() {
+    const randomId = Math.floor(Math.random() * 10000);
+    emailInput.value = "anonym_" + randomId + "@et-mail.de";
+    
+    // Kleines visuelles Feedback
+    statusMessage.className = "status-msg status-success";
+    statusMessage.textContent = "Anonyme E-Mail wurde im Feld eingetragen!";
+    statusMessage.style.display = "block";
+    setTimeout(() => { statusMessage.style.display = "none"; }, 3000);
+  }
+
+  // Senden abfangen und validieren
+  form.addEventListener("submit", function(event) {
+    event.preventDefault(); // Stoppt das Neuladen der Seite
+    
+    // 1. Mindestens zwei Wörter überprüfen
+    const text = messageInput.value.trim();
+    const words = text.split(/\s+/).filter(word => word.length > 0);
+    
+    if (words.length < 2) {
+      statusMessage.className = "status-msg status-error";
+      statusMessage.textContent = "Bitte schreibe mindestens zwei Wörter für deine Bewertung!";
+      statusMessage.style.display = "block";
+      return;
+    }
+
+    // 2. Automatischer Fallback, wenn das Feld komplett leer gelassen wurde
+    if (emailInput.value.trim() === "") {
+      const randomId = Math.floor(Math.random() * 10000);
+      emailInput.value = "anonym_" + randomId + "@et-mail.de";
+    }
+
+    // Button sperren während der Übertragung
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Wird gesendet...";
+
+    // 3. Sicherer AJAX-Versand über JSON (CORS-Fehlerfrei für Formspree)
+    const data = {
+      _replyto: emailInput.value,
+      Bewertung: messageInput.value
+    };
+
+    fetch(form.action, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        statusMessage.className = "status-msg status-success";
+        statusMessage.textContent = "Vielen Dank! Deine Bewertung wurde erfolgreich abgeschickt.";
+        statusMessage.style.display = "block";
+        
+        // INPUT-FELDER LEEREN
+        form.reset();
+      } else {
+        throw new Error("Fehler beim Senden");
+      }
+    }).catch(error => {
+      statusMessage.className = "status-msg status-error";
+      statusMessage.textContent = "Hoppla! Es gab ein Problem beim Absenden. Bitte überprüfe deine Internetverbindung.";
+      statusMessage.style.display = "block";
+    }).finally(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Bewertung abschicken";
+    });
+  });
+</script>
 
 </body>
 </html>
