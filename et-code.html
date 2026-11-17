@@ -1,0 +1,49 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>et-Code — et-Tools</title><style>:root{color-scheme:dark;--bg:#0b1018;--line:#304056;--text:#f2f5fa;--muted:#9eacbd;--a:#b5f27b}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0,#263d49,transparent 40%),var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif}.wrap{max-width:1050px;margin:auto;padding:22px 18px 55px}header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:35px}.brand{font-size:23px;font-weight:900}.brand span,.eyebrow{color:var(--a)}nav{display:flex;gap:8px;flex-wrap:wrap}nav a,.sub{color:var(--text);text-decoration:none;background:#253346;border:1px solid var(--line);padding:8px 11px;border-radius:10px;font-size:13px;font-weight:700}.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:800}h1{font-size:clamp(36px,6vw,56px);line-height:1.05;letter-spacing:-2px;margin:10px 0}p{color:var(--muted)}.panel{background:linear-gradient(145deg,#1a2737,#121b28);border:1px solid var(--line);border-radius:18px;padding:19px}input,select,textarea{width:100%;min-width:0;padding:11px;margin:5px 0 12px;background:#0d1520;border:1px solid #35445a;border-radius:10px;color:var(--text);font:inherit}input[type=checkbox]{width:18px;min-width:18px;height:18px;accent-color:var(--a)}input[type=color]{height:45px;padding:4px}input[type=range]{padding:0}.btn{border:0;background:var(--a);color:#17210f;padding:10px 14px;border-radius:10px;font-weight:850;cursor:pointer}.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}.checks label{display:flex;align-items:center;gap:8px}.note{font-size:12px;color:var(--muted)}.swatches{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:18px 0}.swatches button{border:0;border-radius:9px;padding:22px 3px;overflow-wrap:anywhere}.foot{font-size:11px;color:#74839a;margin-top:25px}canvas{max-width:100%;height:auto;display:block;margin:12px 0}#qr{margin-top:15px;background:white;display:inline-block;padding:10px;border-radius:10px}#qr img{max-width:100%;height:auto}@media(max-width:550px){.wrap{padding:16px 12px}.form{grid-template-columns:1fr}.swatches{grid-template-columns:repeat(2,1fr)}.checks{grid-template-columns:1fr}h1{letter-spacing:-1px}}</style></head><body><div class="wrap"><header><div class="brand"><span>et-</span>Code</div><nav><a href="index.html">← Home</a><a href="et-tools.html">☷ Tool-Menü</a></nav></header><div class="eyebrow">et-Tools · Dein Alltag, einfacher</div><h1>et-Code</h1><p>HTML, CSS und JavaScript übersichtlicher formatieren</p><main class="panel"><label for="mode">Code-Typ</label><select id="mode"><option value="auto">Automatisch erkennen</option><option value="html">HTML</option><option value="css">CSS</option><option value="js">JavaScript</option></select><label>Code</label><textarea id="src" rows="12" style="font-family:monospace" placeholder="HTML, CSS oder JavaScript …"></textarea><button class="btn" id="go">Einrückung verbessern</button><textarea id="out" rows="12" style="font-family:monospace"></textarea><button class="sub" id="copy">Kopieren</button><p id="status" class="note">Ein einfacher Formatter. Bitte das Ergebnis prüfen; er ersetzt keinen vollständigen Code-Parser.</p></main><div class="foot">et-Tools · Prüfe Ergebnisse vor der Verwendung.</div></div><script>
+const $=id=>document.getElementById(id);
+function formatMarkup(source){
+  let depth=0,out=[];
+  for(const token of source.replace(/>\s*</g,'>\n<').split(/\n+/)){
+    const line=token.trim();if(!line)continue;
+    if(/^<\//.test(line))depth=Math.max(0,depth-1);
+    out.push('  '.repeat(depth)+line);
+    if(/^<(?![!/])[^>]+>$/.test(line)&&!/\/>$/.test(line)&&!/^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\b/i.test(line))depth++;
+  }
+  return out.join('\n');
+}
+function formatBraces(source){
+  let out='',depth=0,parens=0,quote='',escaped=false,line='',lineComment=false,blockComment=false;
+  const indent=()=> '  '.repeat(Math.max(0,depth));
+  const flush=()=>{let v=line.trim();if(v){out+=indent()+v+'\n';line='';}};
+  for(let i=0;i<source.length;i++){
+    let c=source[i],n=source[i+1];
+    if(lineComment){line+=c;if(c==='\n'){lineComment=false;flush();}continue;}
+    if(blockComment){line+=c;if(c==='*'&&n==='/'){line+='/';i++;blockComment=false;}continue;}
+    if(quote){line+=c;if(escaped)escaped=false;else if(c==='\\')escaped=true;else if(c===quote)quote='';continue;}
+    if(c==='"'||c==="'"||c==='`'){quote=c;line+=c;continue;}
+    if(c==='/'&&n==='/'){line+='//';i++;lineComment=true;continue;}
+    if(c==='/'&&n==='*'){line+='/*';i++;blockComment=true;continue;}
+    if(c==='('||c==='['){parens++;line+=c;continue;}
+    if(c===')'||c===']'){parens=Math.max(0,parens-1);line+=c;continue;}
+    if(c==='{'){line+=' {';flush();depth++;continue;}
+    if(c==='}'){flush();depth=Math.max(0,depth-1);line='}';if(n!==';'&&n!==','&&n!==')')flush();continue;}
+    if(c===';'&&parens===0){line+=';';flush();continue;}
+    if(c==='\n'){flush();continue;}
+    if(c===' '&&line.endsWith(' '))continue;
+    line+=c;
+  }
+  flush();return out.trim();
+}
+$('go').onclick=()=>{
+  const source=$('src').value.trim();
+  if(!source){$('out').value='';$('status').textContent='Bitte zuerst Code einfügen.';return;}
+  let mode=$('mode').value;
+  if(mode==='auto')mode=/<\/?[a-z][\s\S]*>/i.test(source)?'html':(/[{}]/.test(source)?'css':'js');
+  $('out').value=mode==='html'?formatMarkup(source):formatBraces(source);
+  const a=(source.match(/{/g)||[]).length,b=(source.match(/}/g)||[]).length;
+  $('status').textContent=a===b?'Formatierung abgeschlossen. Klammern zahlenmäßig ausgeglichen.':'Formatierung abgeschlossen – bitte Klammern prüfen.';
+};
+$('copy').onclick=async()=>{
+  try{await navigator.clipboard.writeText($('out').value);$('copy').textContent='Kopiert ✓';}
+  catch(e){$('out').focus();$('out').select();$('copy').textContent='Bitte manuell kopieren';}
+};
+</script></body></html>
