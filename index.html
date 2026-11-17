@@ -232,27 +232,138 @@
             color: #c45500;
             text-decoration: underline;
         }
+/* Responsive Navigation */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    min-width: 0;
+}
+.nav-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: max-content;
+    flex: 0 0 auto;
+}
+
+.nav-links .header-info-btn,
+.more-menu .header-info-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.more-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.more-button {
+    background: #ff9900;
+    color: #131921;
+    border: 0;
+    border-radius: 5px;
+    padding: 8px 13px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.more-button:hover {
+    background: #ffad32;
+}
+
+.more-menu {
+    position: absolute;
+    top: calc(100% + 9px);
+    right: 0;
+    z-index: 1000;
+    min-width: 190px;
+    padding: 8px;
+    background: #131921;
+    border: 1px solid #394353;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.3);
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.more-menu[hidden],
+.more-wrap[hidden] {
+    display: none !important;
+}
+
+.more-menu .header-info-btn {
+    display: block;
+    text-align: left;
+    padding: 10px 12px;
+}
+
+@media (max-width: 500px) {
+    .navbar {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+
+    .logo {
+        font-size: 19px;
+    }
+
+    .more-button {
+        padding: 9px 12px;
+    }
+}
     </style>
 </head>
 <body>
 
     <!-- Obere Navigation -->
-    <header>
-        <div class="navbar">
-            <!-- Logo mit farblicher Trennung -->
-            <a href="#" class="logo">et-<span>studio</span></a>
-            <a href="bewertung.html" class="header-info-btn header-review-btn">Spiele bewerten</a>
-            <!-- Link für den "Über et-studio" Button -->
-            <a href="ueber.html" class="header-info-btn">Über et-studio</a>
-        <a href="kochbuch.html" class="header-info-btn">
-            🍓 Kochbuch
-        </a>
-        </div>
-        <a href="et-tools.html" class="header-info-btn">
-            et-tools
-        </a>
-        </div>
-    </header>
+<header>
+    <div class="navbar">
+        <a href="#" class="logo">et-<span>studio</span></a>
+
+        <nav class="nav-actions" id="navActions">
+            <div class="nav-links" id="navLinks">
+                <a href="bewertung.html" class="header-info-btn">
+                    Spiele bewerten
+                </a>
+
+                <a href="ueber.html" class="header-info-btn">
+                    Über et-studio
+                </a>
+
+                <a href="kochbuch.html" class="header-info-btn">
+                    🍓 Kochbuch
+                </a>
+
+                <a href="et-tools.html" class="header-info-btn">
+                    et-tools
+                </a>
+            </div>
+
+            <div class="more-wrap" id="moreWrap" hidden>
+                <button class="more-button" id="moreButton"
+                        aria-expanded="false" aria-controls="moreMenu">
+                    Mehr ▾
+                </button>
+
+                <div class="more-menu" id="moreMenu" hidden></div>
+            </div>
+        </nav>
+    </div>
+</header>
 
     <!-- Hauptinhalt -->
     <main class="main-content">
@@ -308,6 +419,101 @@
         </div>
 
     </main>
+<script>
+const navActions = document.getElementById("navActions");
+const navLinks = document.getElementById("navLinks");
+const moreWrap = document.getElementById("moreWrap");
+const moreButton = document.getElementById("moreButton");
+const moreMenu = document.getElementById("moreMenu");
+
+const navItems = [...navLinks.querySelectorAll("a")];
+
+function updateNavigation() {
+    // Alle Links zunächst wieder in die normale Zeile legen
+    navItems.forEach(link => navLinks.appendChild(link));
+
+    moreMenu.hidden = true;
+    moreWrap.hidden = false;
+
+    navLinks.style.width = "max-content";
+    navLinks.style.flex = "0 0 auto";
+
+    const gap = parseFloat(getComputedStyle(navLinks).gap) || 0;
+    const moreGap = parseFloat(getComputedStyle(navActions).gap) || 0;
+
+    const available = navActions.clientWidth;
+    const moreWidth = moreButton.offsetWidth;
+
+    const widths = navItems.map(link => link.offsetWidth);
+
+    const totalWidth =
+        widths.reduce((sum, width) => sum + width, 0) +
+        gap * Math.max(0, navItems.length - 1);
+
+    // Wenn alles passt, kein Mehr-Menü anzeigen
+    if (totalWidth <= available) {
+        moreWrap.hidden = true;
+        navLinks.style.width = "auto";
+        navLinks.style.flex = "0 1 auto";
+        return;
+    }
+
+    // Platz für den Mehr-Button reservieren
+    const budget = Math.max(0, available - moreWidth - moreGap);
+
+    let used = 0;
+    let fitCount = 0;
+
+    for (let i = 0; i < widths.length; i++) {
+        const nextWidth = widths[i] + (fitCount > 0 ? gap : 0);
+
+        if (used + nextWidth <= budget) {
+            used += nextWidth;
+            fitCount++;
+        } else {
+            break;
+        }
+    }
+
+    // Überzählige Buttons ins Dropdown verschieben
+    navItems.slice(fitCount).forEach(link => {
+        moreMenu.appendChild(link);
+    });
+
+    navLinks.style.width = "auto";
+    navLinks.style.flex = "0 1 auto";
+
+    moreWrap.hidden = fitCount === navItems.length;
+}
+
+moreButton.addEventListener("click", () => {
+    const isOpen = !moreMenu.hidden;
+    moreMenu.hidden = isOpen;
+    moreButton.setAttribute("aria-expanded", String(!isOpen));
+});
+
+document.addEventListener("click", event => {
+    if (!moreWrap.contains(event.target)) {
+        moreMenu.hidden = true;
+        moreButton.setAttribute("aria-expanded", "false");
+    }
+});
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+        moreMenu.hidden = true;
+        moreButton.setAttribute("aria-expanded", "false");
+    }
+});
+
+const observer = new ResizeObserver(updateNavigation);
+observer.observe(navActions);
+
+window.addEventListener("load", updateNavigation);
+window.addEventListener("resize", updateNavigation);
+
+updateNavigation();
+</script>
 
 </body>
 </html>
