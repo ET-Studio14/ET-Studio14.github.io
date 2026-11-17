@@ -4,6 +4,23 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#101225">
 <title>et-iq – Denk dich schlau</title>
 <style>
+ .home-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+  padding: 10px 18px;
+  background: #29204f;
+  color: white;
+  text-decoration: none;
+  border: 1px solid #8065d9;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.home-button:hover {
+  background: #493580;
+}
 :root{--bg:#0d1020;--panel:#171b31;--panel2:#202642;--text:#f4f5ff;--muted:#aeb5d0;--purple:#9b7bff;--blue:#59c7ff;--line:rgba(255,255,255,.11);--good:#65d6a2;--bad:#ff8795}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(ellipse at 15% 0%,rgba(111,76,255,.22),transparent 38%),radial-gradient(ellipse at 95% 20%,rgba(42,176,255,.14),transparent 34%),var(--bg)}
 .shell{width:min(760px,calc(100% - 32px));margin:0 auto;padding:28px 0 48px}header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}.brand{font-size:1.55rem;font-weight:900;letter-spacing:-1px}.brand span{color:var(--purple)}.tag{color:var(--muted);font-size:.82rem;border:1px solid var(--line);padding:7px 11px;border-radius:999px}
@@ -19,6 +36,7 @@ footer{text-align:center;color:#8189a8;font-size:.78rem;line-height:1.6;margin-t
 </head>
 <body>
 <main class="shell">
+ <a href="index.html" class="home-button">⌂ Home</a>
 <header><div class="brand">et-<span>iq</span></div><div class="tag">Ein Denkspiel von et-studio</div></header>
 <section id="intro" class="card">
  <div class="hero"><div class="brain" aria-hidden="true">🧠</div><h1>Wie clever <span>denkst du?</span></h1><p class="subtitle">15 zufällig ausgewählte Herausforderungen aus einem Pool von 70 Fragen.</p></div>
