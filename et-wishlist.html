@@ -6,13 +6,13 @@
 <meta name="theme-color" content="#0b1018">
 <title>et-Wishlist — et-Tools</title>
 <style>
-:root{color-scheme:dark;--bg:#0b1018;--panel:#172231;--line:#304056;--text:#f2f5fa;--muted:#9eacbd;--a:#b5f27b}
+:root{color-scheme:dark;--bg:#0b1018;--panel:#172231;--line:#304056;--text:#f2f5fa;--muted:#9eacbd;--a:#b5f27b;--purple:#a78bfa}
 *{box-sizing:border-box}
 body{margin:0;background:radial-gradient(ellipse at 80% 0,#263d49,transparent 40%),var(--bg);color:var(--text);font:15px/1.5 system-ui,Segoe UI,sans-serif}
 .wrap{max-width:1100px;margin:auto;padding:22px 18px 55px}
-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:42px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:38px}
 .brand{font-size:23px;font-weight:900}.brand span{color:var(--a)}
-nav{display:flex;gap:8px}nav a{color:var(--text);text-decoration:none;background:#1c2938;border:1px solid var(--line);padding:8px 12px;border-radius:10px;font-size:13px;font-weight:700}
+nav{display:flex;gap:8px;flex-wrap:wrap}nav a{color:var(--text);text-decoration:none;background:#1c2938;border:1px solid var(--line);padding:8px 12px;border-radius:10px;font-size:13px;font-weight:700}
 .eyebrow{color:var(--a);font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:800}
 h1{font-size:clamp(36px,6vw,58px);line-height:1.05;letter-spacing:-2px;margin:10px 0}
 p{color:var(--muted)}
@@ -25,6 +25,7 @@ input,select{width:100%;min-width:0;padding:11px;background:#0d1520;border:1px s
 label{font-size:11px;color:var(--muted);font-weight:700;display:block;margin-bottom:5px}
 button{cursor:pointer;font:inherit}
 .btn{border:0;background:var(--a);color:#17210f;padding:10px 14px;border-radius:10px;font-weight:850}
+.btn.secondary{background:#263449;color:var(--text);border:1px solid #43536a}
 .sub{background:#253346;color:var(--text);border:1px solid var(--line);padding:7px 10px;border-radius:9px}
 .danger{background:#41272d;color:#ffb4b4;border:1px solid #633b43}
 .list{display:grid;gap:8px;margin-top:14px}
@@ -37,87 +38,108 @@ button{cursor:pointer;font:inherit}
 .bar{height:8px;background:#0b1717;border-radius:8px;overflow:hidden;margin:12px 0}
 .bar i{display:block;height:100%;background:var(--a);width:0}
 .foot{font-size:11px;color:#74839a;margin-top:18px}
-.et-data-tools{max-width:1180px;margin:0 auto 16px;padding:11px 14px;border:1px solid #344054;border-radius:12px;background:#151b27;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-.et-data-tools strong{font-size:13px;margin-right:auto}
-.et-data-tools button{border:1px solid #536078;background:#222c3c;color:inherit;border-radius:8px;padding:8px 12px;font:inherit;font-size:13px}
-.et-data-tools input{display:none}
-.et-data-note{flex-basis:100%;font-size:11px;opacity:.72}
-a.itemlink{color:var(--a);font-size:12px;text-decoration:none}
+a.itemlink{color:var(--a);font-size:12px;text-decoration:none;display:inline-block;margin-top:4px;overflow-wrap:anywhere}
 a.itemlink:hover{text-decoration:underline}
+.et-data-tools{margin:0 0 15px;padding:14px;border:1px solid #344054;border-radius:14px;background:#151b27;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.data-action{display:grid;gap:7px}
+.data-action strong{font-size:13px}
+.data-action .btn{width:100%}
+.data-note{grid-column:1/-1;font-size:11px;color:var(--muted)}
+.pdf-panel{margin-top:15px;background:linear-gradient(130deg,#282348,#172333 70%);border:1px solid #514477}
+.pdf-panel .eyebrow{color:#c4b5fd}
+.pdf-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
 @media(max-width:760px){.layout{grid-template-columns:1fr}}
-@media(max-width:500px){header{align-items:flex-start;gap:10px;flex-wrap:wrap}nav{flex-wrap:wrap}.wrap{padding:16px 12px}.form{grid-template-columns:1fr}.full{grid-column:auto}header{margin-bottom:32px}.item{gap:8px}}
+@media(max-width:560px){header{align-items:flex-start;gap:10px;flex-wrap:wrap}.wrap{padding:16px 12px}.form{grid-template-columns:1fr}.full{grid-column:auto}.et-data-tools{grid-template-columns:1fr}.data-note{grid-column:auto}.pdf-row{grid-template-columns:1fr}header{margin-bottom:30px}.item{gap:8px}}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 <div class="wrap">
 <header>
-<div class="brand"><span>et-</span>Wishlist</div>
-<nav>
-<a href="index.html">← Home</a>
-<a href="et-tools.html">☷ Tool-Menü</a>
-</nav>
+  <div class="brand"><span>et-</span>Wishlist</div>
+  <nav><a href="index.html">← Home</a><a href="et-tools.html">☷ Tool-Menü</a></nav>
 </header>
-
-<div class="et-data-tools">
-<strong>Deine Daten</strong>
-<button type="button" id="etExportData">↓ Daten herunterladen</button>
-<button type="button" id="etImportData">↑ Daten-Datei hinzufügen</button>
-<input type="file" id="etImportFile" accept=".json,application/json">
-<span class="et-data-note">Exportiert oder ergänzt deine lokal gespeicherten Einträge. Beim Import bleiben vorhandene Einträge erhalten.</span>
-</div>
 
 <div class="eyebrow">et-Tools · Dein Alltag, einfacher</div>
 <h1>et-Wishlist</h1>
-<p>Wünsche sammeln und Käufe festhalten.</p>
+<p>Wünsche sammeln, Käufe festhalten und deine Wunschliste als PDF gestalten.</p>
 
-<div style="margin-top:25px">
+<section class="et-data-tools" aria-label="Daten sichern und wiederherstellen">
+  <div class="data-action">
+    <strong>↓ Download</strong>
+    <select id="exportType" aria-label="Welche Einträge herunterladen?">
+      <option value="all">Wünsche und Käufe</option>
+      <option value="wish">Nur Wünsche</option>
+      <option value="buy">Nur Käufe</option>
+    </select>
+    <button class="btn secondary" type="button" id="etExportData">Auswahl herunterladen</button>
+  </div>
+  <div class="data-action">
+    <strong>↑ Upload</strong>
+    <select id="importType" aria-label="Welche Einträge importieren?">
+      <option value="all">Wünsche und Käufe aus Datei</option>
+      <option value="wish">Nur Wünsche aus Datei</option>
+      <option value="buy">Nur Käufe aus Datei</option>
+    </select>
+    <button class="btn secondary" type="button" id="etImportData">Datei auswählen</button>
+    <input type="file" id="etImportFile" accept=".json,application/json" hidden>
+  </div>
+  <div class="data-note">Beim Import werden vorhandene Einträge nicht überschrieben. Du kannst gezielt nur Wünsche oder nur Käufe übernehmen.</div>
+</section>
+
 <div class="layout">
-<main class="panel">
-<h2 id="formTitle">Eintrag hinzufügen</h2>
+  <main class="panel">
+    <h2>Eintrag hinzufügen</h2>
+    <form id="f" class="form">
+      <div class="full">
+        <label>Was möchtest du eintragen?</label>
+        <select id="type">
+          <option value="wish">⭐ Wunsch</option>
+          <option value="buy">🛒 Kauf</option>
+        </select>
+      </div>
+      <div class="full">
+        <label id="nameLabel">Wunsch</label>
+        <input id="name" required placeholder="Was wünschst du dir?">
+      </div>
+      <div>
+        <label>Preis (€)</label>
+        <input id="price" type="number" min="0" step=".01" placeholder="0,00">
+      </div>
+      <div id="savedField" hidden>
+        <label>Schon gespart (€)</label>
+        <input id="saved" type="number" min="0" step=".01" value="0">
+      </div>
+      <div class="full">
+        <label>Link (optional)</label>
+        <input id="link" type="url" placeholder="https://...">
+      </div>
+      <div class="full">
+        <button class="btn" id="submitBtn">Wunsch speichern</button>
+      </div>
+    </form>
+    <div id="list" class="list"></div>
+  </main>
 
-<form id="f" class="form">
-<div class="full">
-<label>Was möchtest du eintragen?</label>
-<select id="type">
-<option value="wish">⭐ Wunsch</option>
-<option value="buy">🛒 Kauf</option>
-</select>
-</div>
-
-<div class="full">
-<label id="nameLabel">Wunsch</label>
-<input id="name" required placeholder="Was wünschst du dir?">
-</div>
-
-<div>
-<label>Preis (€)</label>
-<input id="price" type="number" min="0" step=".01" placeholder="0,00">
-</div>
-
-<div id="savedField" hidden>
-<label>Schon gespart (€)</label>
-<input id="saved" type="number" min="0" step=".01" value="0">
-</div>
-
-<div id="linkField" class="full" hidden>
-<label>Link zum Wunsch</label>
-<input id="link" type="url" placeholder="https://...">
-</div>
-
-<div class="full">
-<button class="btn" id="submitBtn">Wunsch speichern</button>
-</div>
-</form>
-
-<div id="list" class="list"></div>
-</main>
-
-<aside class="panel green">
-<div class="eyebrow">Deine Übersicht</div>
-<div class="stat" id="count">0 Einträge</div>
-<p id="sum"></p>
-</aside>
-</div>
+  <aside>
+    <section class="panel green">
+      <div class="eyebrow">Deine Übersicht</div>
+      <div class="stat" id="count">0 Einträge</div>
+      <p id="sum"></p>
+    </section>
+    <section class="panel pdf-panel">
+      <div class="eyebrow">Zum Teilen & Ausdrucken</div>
+      <h2>Deine Wunschliste als PDF</h2>
+      <p>Eine schön gestaltete Liste mit deinen Wünschen, Preisen und optionalen Links.</p>
+      <div class="pdf-row">
+        <div>
+          <label for="pdfName">Dein Name</label>
+          <input id="pdfName" maxlength="50" placeholder="z. B. Alex">
+        </div>
+        <button class="btn" type="button" id="pdfDownload">✦ PDF herunterladen</button>
+      </div>
+    </section>
+  </aside>
 </div>
 
 <div class="foot">et-Tools · Lokal im Browser gespeichert. Keine Anmeldung erforderlich.</div>
@@ -126,163 +148,145 @@ a.itemlink:hover{text-decoration:underline}
 <script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const money=n=>new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(n);
-
-let a=JSON.parse(localStorage.getItem('et-wish')||'[]');
-
-// Alte Einträge bleiben erhalten und werden als Käufe behandelt.
-a=a.map(x=>({...x,type:x.type||'buy'}));
-
-function save(){
-localStorage.setItem('et-wish',JSON.stringify(a));
-}
-
+const money=n=>new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(Number(n)||0);
+const validUrl=value=>{try{const u=new URL(value);return u.protocol==='http:'||u.protocol==='https:'}catch{return false}};
+let a=[];
+try{const saved=JSON.parse(localStorage.getItem('et-wish')||'[]');a=Array.isArray(saved)?saved:[]}catch{a=[]}
+// Ältere Wishlist-Einträge werden als Käufe übernommen, damit sie vollständig erhalten bleiben.
+a=a.map(x=>({...x,type:x.type||'buy',url:x.url||x.link||''}));
+function save(){localStorage.setItem('et-wish',JSON.stringify(a))}
 function updateForm(){
-const wish=$('type').value==='wish';
-$('savedField').hidden=wish;
-$('linkField').hidden=!wish;
-$('nameLabel').textContent=wish?'Wunsch':'Gekaufter Artikel';
-$('name').placeholder=wish?'Was wünschst du dir?':'Was hast du gekauft?';
-$('submitBtn').textContent=wish?'Wunsch speichern':'Kauf speichern';
-$('formTitle').textContent=wish?'Wunsch hinzufügen':'Kauf hinzufügen';
+ const wish=$('type').value==='wish';
+ $('savedField').hidden=wish;
+ $('nameLabel').textContent=wish?'Wunsch':'Gekaufter Artikel';
+ $('name').placeholder=wish?'Was wünschst du dir?':'Was hast du gekauft?';
+ $('submitBtn').textContent=wish?'Wunsch speichern':'Kauf speichern';
 }
 $('type').addEventListener('change',updateForm);
 
 function draw(){
-const wishes=a.filter(x=>x.type==='wish');
-const buys=a.filter(x=>x.type!=='wish');
-
-$('count').textContent=a.length+' Einträge';
-$('sum').innerHTML=
-'<b>'+wishes.length+' Wünsche</b> · '+money(wishes.reduce((s,x)=>s+(Number(x.p)||0),0))+' Gesamtwert<br>'+
-'<b>'+buys.length+' Käufe</b> · '+money(buys.reduce((s,x)=>s+(Number(x.s)||0),0))+' gespart';
-
-$('list').innerHTML=a.map(x=>{
-if(x.type==='wish'){
-return `<div class="item">
-<div class="itemmain">
-<b>⭐ ${esc(x.n)}</b>
-<div class="meta">${money(Number(x.p)||0)}</div>
-${x.url?`<a class="itemlink" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">Link öffnen ↗</a>`:''}
-</div>
-<button class="sub danger" data-x="${x.id}">×</button>
-</div>`;
+ const wishes=a.filter(x=>x.type==='wish'),buys=a.filter(x=>x.type!=='wish');
+ $('count').textContent=a.length+' Einträge';
+ $('sum').innerHTML='<b>'+wishes.length+' Wünsche</b> · '+money(wishes.reduce((s,x)=>s+(Number(x.p)||0),0))+' Gesamtwert<br><b>'+buys.length+' Käufe</b> · '+money(buys.reduce((s,x)=>s+(Number(x.s)||0),0))+' gespart';
+ $('list').innerHTML=a.map(x=>{
+   const link=validUrl(x.url||'')?`<a class="itemlink" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">Link öffnen ↗</a>`:'';
+   if(x.type==='wish') return `<div class="item"><div class="itemmain"><b>⭐ ${esc(x.n)}</b><div class="meta">${money(x.p)}</div>${link}</div><button class="sub danger" data-x="${esc(x.id)}" aria-label="Wunsch löschen">×</button></div>`;
+   return `<div class="item"><div class="itemmain"><b>🛒 ${esc(x.n)}</b><div class="meta">${money(x.s)} von ${money(x.p)} gespart</div><div class="bar"><i style="width:${x.p?Math.min(100,(Number(x.s)||0)/Number(x.p)*100):0}%"></i></div>${link}</div><button class="sub" data-a="${esc(x.id)}">+10 €</button><button class="sub danger" data-x="${esc(x.id)}" aria-label="Kauf löschen">×</button></div>`;
+ }).join('')||'<div class="empty">Noch keine Wünsche oder Käufe.</div>';
+ document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const x=a.find(x=>String(x.id)===b.dataset.a);if(!x)return;x.s=Math.min(Number(x.p)||Infinity,(Number(x.s)||0)+10);save();draw()});
+ document.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{a=a.filter(x=>String(x.id)!==b.dataset.x);save();draw()});
 }
-return `<div class="item">
-<div class="itemmain">
-<b>🛒 ${esc(x.n)}</b>
-<div class="meta">${money(Number(x.s)||0)} von ${money(Number(x.p)||0)} gespart</div>
-<div class="bar"><i style="width:${x.p?Math.min(100,(x.s||0)/x.p*100):0}%"></i></div>
-</div>
-<button class="sub" data-a="${x.id}">+10 €</button>
-<button class="sub danger" data-x="${x.id}">×</button>
-</div>`;
-}).join('')||'<div class="empty">Noch keine Wünsche oder Käufe.</div>';
-
-document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{
-let x=a.find(x=>x.id==b.dataset.a);
-x.s=Math.min(Number(x.p)||Infinity,(Number(x.s)||0)+10);
-save();draw();
-});
-
-document.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{
-a=a.filter(x=>x.id!=b.dataset.x);
-save();draw();
-});
-}
-
 $('f').onsubmit=e=>{
-e.preventDefault();
-const type=$('type').value;
-const p=Number($('price').value)||0;
-const s=type==='buy'?(Number($('saved').value)||0):0;
-
-if(type==='buy'&&p&&s>p){
-alert('Gespart kann nicht höher als der Preis sein.');
-return;
-}
-
-const item={
-id:Date.now(),
-type,
-n:$('name').value.trim(),
-p,
-s
+ e.preventDefault();
+ const type=$('type').value,p=Number($('price').value)||0,s=type==='buy'?(Number($('saved').value)||0):0,url=$('link').value.trim();
+ if(type==='buy'&&p&&s>p){alert('Gespart kann nicht höher als der Preis sein.');return}
+ if(url&&!validUrl(url)){alert('Bitte gib einen gültigen Link mit https:// oder http:// ein.');return}
+ a.push({id:Date.now(),type,n:$('name').value.trim(),p,s,url});
+ save();e.target.reset();$('type').value=type;$('saved').value=0;updateForm();draw();
 };
+draw();updateForm();
 
-if(type==='wish'){
-item.url=$('link').value.trim();
-}
-
-a.push(item);
-save();
-e.target.reset();
-$('type').value=type;
-$('saved').value=0;
-updateForm();
-draw();
-};
-
-draw();
-updateForm();
-
-// Daten-Export und Import
-(()=>{
-const dataKey='et-wish';
-const exportBtn=$('etExportData');
-const importBtn=$('etImportData');
-const fileInput=$('etImportFile');
-
-exportBtn.addEventListener('click',()=>{
-const payload={
-format:'et-tools-backup',
-version:1,
-tool:dataKey,
-exportedAt:new Date().toISOString(),
-data:a
-};
-const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-const url=URL.createObjectURL(blob);
-const link=document.createElement('a');
-link.href=url;
-link.download=dataKey+'-daten-'+new Date().toISOString().slice(0,10)+'.json';
-document.body.appendChild(link);
-link.click();
-link.remove();
-setTimeout(()=>URL.revokeObjectURL(url),1000);
+// JSON-Export: Auswahl wird in die Datei übernommen.
+$('etExportData').addEventListener('click',()=>{
+ const type=$('exportType').value;
+ const selected=a.filter(x=>type==='all'||(type==='wish'?x.type==='wish':x.type!=='wish'));
+ if(!selected.length){alert('Für diese Auswahl gibt es noch keine Einträge.');return}
+ const payload={format:'et-tools-backup',version:1,tool:'et-wish',exportedAt:new Date().toISOString(),filter:type,data:selected};
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob),link=document.createElement('a');
+ link.href=url;link.download='et-wishlist-'+type+'-'+new Date().toISOString().slice(0,10)+'.json';
+ document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
 
-importBtn.addEventListener('click',()=>fileInput.click());
-
-fileInput.addEventListener('change',async()=>{
-const file=fileInput.files&&fileInput.files[0];
-if(!file)return;
-
-try{
-const parsed=JSON.parse(await file.text());
-if(!parsed||parsed.format!=='et-tools-backup'||parsed.version!==1||parsed.tool!==dataKey||!Array.isArray(parsed.data)){
-throw new Error('Die Datei ist kein gültiger Daten-Export für dieses Tool.');
-}
-
-if(!confirm(parsed.data.length+' Einträge aus der Datei hinzufügen? Vorhandene Daten bleiben erhalten.'))return;
-
-const merged=a.slice();
-for(const item of parsed.data){
-if(!merged.some(x=>String(x.id)===String(item.id))){
-merged.push({...item,type:item.type||'buy'});
-}
-}
-a=merged;
-save();
-draw();
-alert('Import abgeschlossen!');
-}catch(err){
-alert('Import fehlgeschlagen: '+err.message);
-}finally{
-fileInput.value='';
-}
+// JSON-Import: erst Dateityp, dann Auswahlfilter beachten und vorhandene Daten erhalten.
+$('etImportData').addEventListener('click',()=>$('etImportFile').click());
+$('etImportFile').addEventListener('change',async()=>{
+ const file=$('etImportFile').files?.[0];if(!file)return;
+ try{
+  const parsed=JSON.parse(await file.text());
+  if(!parsed||parsed.format!=='et-tools-backup'||parsed.version!==1||parsed.tool!=='et-wish'||!Array.isArray(parsed.data))throw new Error('Die Datei ist kein gültiger et-Wishlist-Export.');
+  const filter=$('importType').value;
+  const incoming=parsed.data.map(x=>({...x,type:x.type||'buy',url:x.url||x.link||''})).filter(x=>filter==='all'||(filter==='wish'?x.type==='wish':x.type!=='wish'));
+  if(!incoming.length){alert('In der Datei wurden keine Einträge für diese Auswahl gefunden.');return}
+  if(!confirm(incoming.length+' '+(filter==='wish'?'Wünsche':filter==='buy'?'Käufe':'Einträge')+' importieren? Vorhandene Einträge bleiben erhalten.'))return;
+  const merged=a.slice();
+  for(const item of incoming){
+   if(!merged.some(x=>String(x.id)===String(item.id))){
+    merged.push({...item,id:item.id??('import-'+Date.now()+'-'+Math.random().toString(36).slice(2))});
+   }else if(JSON.stringify(merged.find(x=>String(x.id)===String(item.id)))!==JSON.stringify(item)){
+    merged.push({...item,id:'import-'+Date.now()+'-'+Math.random().toString(36).slice(2)});
+   }
+  }
+  a=merged;save();draw();alert('Import abgeschlossen: '+incoming.length+' Einträge hinzugefügt bzw. geprüft.');
+ }catch(err){alert('Import fehlgeschlagen: '+err.message)}
+ finally{$('etImportFile').value=''}
 });
-})();
+
+// Gestaltetes PDF nur aus Wunsch-Einträgen (nicht aus Käufen).
+$('pdfDownload').addEventListener('click',()=>{
+ const wishes=a.filter(x=>x.type==='wish');
+ if(!wishes.length){alert('Du hast noch keine Wünsche für deine PDF-Wunschliste.');return}
+ const JsPDF=window.jspdf&&window.jspdf.jsPDF;
+ if(!JsPDF){alert('Der PDF-Generator konnte nicht geladen werden. Bitte prüfe deine Internetverbindung und lade die Seite neu.');return}
+ const doc=new JsPDF({unit:'mm',format:'a4'});
+ const pageW=210,pageH=297,margin=18;
+ const rawName=$('pdfName').value.trim();
+ const safeName=rawName.replace(/[<>]/g,'').slice(0,50);
+ const possessive=safeName?(/[sxz]$/i.test(safeName)?safeName+"'":safeName+"s"):"Meine";
+ const title=possessive+" Wunschliste";
+ const total=wishes.reduce((s,x)=>s+(Number(x.p)||0),0);
+ const purple=[105,82,170],dark=[22,27,43],ink=[37,43,61],muted=[112,119,137],mint=[190,239,145];
+ let y=0,page=1;
+ function footer(){
+  doc.setDrawColor(225,226,235);doc.line(margin,pageH-15,pageW-margin,pageH-15);
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...muted);
+  doc.text('et-Wishlist  ·  '+page,pageW-margin,pageH-9,{align:'right'});
+ }
+ function header(first){
+  if(first){
+   doc.setFillColor(...dark);doc.rect(0,0,pageW,67,'F');
+   doc.setFillColor(...purple);doc.roundedRect(margin,13,35,8,3,3,'F');
+   doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(255,255,255);doc.text('ET-STUDIO  /  WISHLIST',margin+4,18.5);
+   doc.setFontSize(24);doc.setTextColor(255,255,255);doc.text(title,margin,39);
+   doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(205,210,224);
+   doc.text('Eine kleine Sammlung grosser Wuensche.',margin,49);
+   doc.setFillColor(...mint);doc.roundedRect(margin,56,48,7,3,3,'F');
+   doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...dark);doc.text(wishes.length+' Wuensche',margin+4,60.7);
+   doc.setTextColor(220,224,235);doc.text('Gesamtwert: '+money(total),pageW-margin,61,{align:'right'});
+   y=82;
+  }else{
+   doc.setFillColor(...dark);doc.rect(0,0,pageW,23,'F');
+   doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(255,255,255);doc.text(title,margin,15);
+   y=34;
+  }
+ }
+ header(true);
+ wishes.forEach((item,index)=>{
+  const link=validUrl(item.url||'');
+  const nameLines=doc.splitTextToSize(String(item.n||'Wunsch'),pageW-2*margin-42);
+  const linkLines=link?doc.splitTextToSize(String(item.url),pageW-2*margin-12):[];
+  const cardH= Math.max(25,12+nameLines.length*5+(link?5+Math.min(linkLines.length,2)*4:0));
+  if(y+cardH>pageH-23){footer();doc.addPage();page++;header(false)}
+  doc.setFillColor(246,247,251);doc.roundedRect(margin,y,pageW-2*margin,cardH,3,3,'F');
+  doc.setFillColor(...purple);doc.roundedRect(margin,y,3,cardH,1,1,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(...ink);
+  doc.text((index+1)+'.',margin+8,y+10);
+  doc.text(nameLines,margin+17,y+10);
+  doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...purple);
+  doc.text(money(item.p),pageW-margin-7,y+10,{align:'right'});
+  if(link){
+   const linkY=y+12+nameLines.length*5;
+   doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(80,115,155);
+   const shown=linkLines.slice(0,2);
+   doc.text(shown,margin+17,linkY);
+   doc.link(margin+17,linkY-3,pageW-2*margin-28,Math.max(5,shown.length*4),{url:item.url});
+  }
+  y+=cardH+5;
+ });
+ footer();
+ const filename='et-wunschliste-'+(safeName.toLowerCase().replace(/[^a-z0-9äöüß-]+/g,'-').replace(/^-|-$/g,'')||'meine')+'.pdf';
+ doc.save(filename);
+});
 </script>
 </body>
 </html>
