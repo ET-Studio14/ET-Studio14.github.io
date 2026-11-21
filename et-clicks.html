@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ET Clicks</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center;
+    padding: 22px; font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+    color: #f4f7ff; background: radial-gradient(circle at top, #18335f, #080d1b 65%);
+  }
+  .app {
+    width: min(100%, 520px); padding: 28px; border: 1px solid #31466f;
+    border-radius: 24px; background: rgba(13, 22, 42, .94);
+    box-shadow: 0 20px 70px #0008; text-align: center;
+  }
+  h1 { margin: 0 0 8px; font-size: clamp(2rem, 8vw, 3rem); letter-spacing: .04em; }
+  .sub { color: #aabbd8; margin: 0 0 24px; }
+  .durations { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; margin-bottom: 18px; }
+  button {
+    border: 1px solid #45618f; color: #eaf1ff; background: #1b2c4d;
+    border-radius: 12px; padding: 10px 15px; font: inherit; font-weight: 650; cursor: pointer;
+  }
+  button.active { background: #2865c7; border-color: #79aaff; }
+  button:focus-visible, .target:focus-visible { outline: 3px solid #9cc2ff; outline-offset: 3px; }
+  .target {
+    width: 100%; min-height: 210px; border: 2px dashed #6d9be5; border-radius: 20px;
+    background: linear-gradient(145deg, #183d72, #14264a);
+    display: grid; place-content: center; gap: 10px; cursor: pointer; user-select: none;
+    touch-action: manipulation; transition: transform .08s, background .15s;
+  }
+  .target:active { transform: scale(.985); background: #24549a; }
+  .target strong { font-size: clamp(1.45rem, 6vw, 2rem); }
+  .target span { color: #c6d8f7; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
+  .stat { background: #111d34; border: 1px solid #293d60; border-radius: 14px; padding: 14px; }
+  .value { display: block; font-size: 2rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .label { color: #aabbd8; font-size: .9rem; }
+  .hint { min-height: 24px; margin: 16px 0 0; color: #b8c9e6; }
+  .again { margin-top: 14px; }
+</style>
+</head>
+<body>
+<main class="app">
+  <h1>ET Clicks</h1>
+  <p class="sub">Wie oft kannst du klicken oder tippen?</p>
+
+  <div class="durations" aria-label="Testdauer auswählen">
+    <button type="button" data-seconds="10">10 Sek.</button>
+    <button type="button" data-seconds="30" class="active">30 Sek.</button>
+    <button type="button" data-seconds="60">1 Min.</button>
+    <button type="button" data-seconds="120">2 Min.</button>
+  </div>
+
+  <div id="target" class="target" role="button" tabindex="0" aria-label="Hier klicken oder tippen, um den Test zu starten und weiterzuklicken">
+    <strong id="targetTitle">Hier drücken zum Starten!</strong>
+    <span id="targetInfo">Der erste Klick startet den Timer und zählt direkt mit.</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><span class="value" id="count">0</span><span class="label">Klicks / Taps</span></div>
+    <div class="stat"><span class="value" id="time">30.0</span><span class="label">Sekunden übrig</span></div>
+    <div class="stat" style="grid-column:1/-1"><span class="value" id="rate">0.0</span><span class="label">Klicks pro Sekunde</span></div>
+  </div>
+  <p class="hint" id="hint" aria-live="polite">Dauer auswählen und direkt ins große Feld drücken.</p>
+  <button class="again" id="again" type="button">Neu starten</button>
+</main>
+
+<script>
+(() => {
+  const target = document.getElementById('target');
+  const title = document.getElementById('targetTitle');
+  const info = document.getElementById('targetInfo');
+  const countEl = document.getElementById('count');
+  const timeEl = document.getElementById('time');
+  const rateEl = document.getElementById('rate');
+  const hint = document.getElementById('hint');
+  const again = document.getElementById('again');
+  const durationButtons = [...document.querySelectorAll('[data-seconds]')];
+
+  let duration = 30;
+  let count = 0;
+  let startedAt = 0;
+  let endsAt = 0;
+  let running = false;
+  let finished = false;
+  let frame = null;
+
+  function updateDisplay(remaining = duration) {
+    countEl.textContent = count;
+    timeEl.textContent = Math.max(0, remaining).toFixed(1);
+    const elapsed = running ? (performance.now() - startedAt) / 1000 :
+      (finished ? duration : 0);
+    rateEl.textContent = elapsed > 0 ? (count / elapsed).toFixed(1) : '0.0';
+  }
+
+  function finish() {
+    running = false;
+    finished = true;
+    if (frame !== null) cancelAnimationFrame(frame);
+    frame = null;
+    updateDisplay(0);
+    title.textContent = 'Zeit vorbei!';
+    info.textContent = `Du hast ${count} Klicks geschafft.`;
+    hint.textContent = `Ergebnis: ${count} Klicks in ${duration} Sekunden.`;
+  }
+
+  function tick() {
+    if (!running) return;
+    const remaining = (endsAt - performance.now()) / 1000;
+    updateDisplay(remaining);
+    if (remaining <= 0) finish();
+    else frame = requestAnimationFrame(tick);
+  }
+
+  function press() {
+    if (finished) return;
+    if (!running) {
+      running = true;
+      startedAt = performance.now();
+      endsAt = startedAt + duration * 1000;
+      title.textContent = 'Weiter drücken!';
+      info.textContent = 'Jeder Druck zählt.';
+      hint.textContent = 'Los geht’s – so schnell du kannst!';
+      frame = requestAnimationFrame(tick);
+    }
+    count++;
+    updateDisplay((endsAt - performance.now()) / 1000);
+  }
+
+  function reset() {
+    if (frame !== null) cancelAnimationFrame(frame);
+    frame = null;
+    count = 0;
+    running = false;
+    finished = false;
+    startedAt = 0;
+    endsAt = 0;
+    title.textContent = 'Hier drücken zum Starten!';
+    info.textContent = 'Der erste Klick startet den Timer und zählt direkt mit.';
+    hint.textContent = 'Dauer auswählen und direkt ins große Feld drücken.';
+    updateDisplay(duration);
+  }
+
+  target.addEventListener('pointerdown', (event) => {
+    event.preventDefault();
+    press();
+  });
+  target.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      press();
+    }
+  });
+
+  durationButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      duration = Number(button.dataset.seconds);
+      durationButtons.forEach(b => b.classList.toggle('active', b === button));
+      reset();
+    });
+  });
+  again.addEventListener('click', reset);
+  updateDisplay(duration);
+})();
+</script>
+</body>
+</html>
